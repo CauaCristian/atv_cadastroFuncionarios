@@ -26,9 +26,13 @@ public class SecurityConfig {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/flight", "/gate", "/passenger").authenticated()
-                        .requestMatchers("/flight/**", "/gate/**", "/passenger/**").hasAuthority("ADMIN")
+                        .requestMatchers(
+                                "/auth/**",
+                                "/voo/**",
+                                "/passageiro/**",
+                                "/portao/**",
+                                "/relatorio/**"
+                        ).permitAll()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -43,3 +47,5 @@ public class SecurityConfig {
     }
 }
 
+ // .requestMatchers(HttpMethod.POST, "/passageiro/**").authenticated()
+//  .requestMatchers( "/voo/**, ","/portao/** ","/relatorio/**").hasAuthority("ADMIN")
