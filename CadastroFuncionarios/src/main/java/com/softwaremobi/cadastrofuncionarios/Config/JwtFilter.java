@@ -31,9 +31,9 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             try {
                 Claims claims = jwtUtil.validateToken(token);
-                String cargo = ((String) claims.get("cargo")).toUpperCase(); // Normaliza o cargo
+                String cargo = ((String) claims.get("cargo")).toUpperCase();
 
-                // Adiciona prefixo ROLE_ conforme padrão do Spring
+
                 List<SimpleGrantedAuthority> authorities = List.of(
                         new SimpleGrantedAuthority("ROLE_" + cargo)
                 );
@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
-                e.printStackTrace(); // ajuda no debug
+                e.printStackTrace();
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }

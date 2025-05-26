@@ -29,17 +29,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
 
-                        // POST /passageiro exige autenticação
                         .requestMatchers(HttpMethod.POST, "/passageiro/**").authenticated()
 
-                        // PUT/DELETE em /voo, /portao, /relatorio exige cargo ADMIN
                         .requestMatchers(HttpMethod.PUT, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
 
-                        // Outras rotas POST (exceto /auth) exigem autenticação
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
 
-                        // Demais requisições são públicas
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
