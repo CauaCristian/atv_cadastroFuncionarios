@@ -22,13 +22,13 @@ public class VooService {
         return vooRepository.findAll();
     }
     public VooModel createVoo(VooModel voo) {
-        if(voo.getPortaoId().isDisponivel()){
-            PortaoModel portao = portaoRepository.findById(voo.getPortaoId().getId()).orElse(null);
-            if (portao != null) {
+        PortaoModel portao = portaoRepository.findById(voo.getPortaoId().getId()).orElse(null);
+        if(portao != null) {
+            if (portao.isDisponivel()) {
                 portao.setDisponivel(false);
                 portaoRepository.save(portao);
+                return vooRepository.save(voo);
             }
-            return vooRepository.save(voo);
         }
         return null;
     }
