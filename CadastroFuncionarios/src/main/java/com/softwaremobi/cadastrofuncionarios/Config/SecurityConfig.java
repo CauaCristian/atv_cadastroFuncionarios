@@ -1,4 +1,5 @@
 package com.softwaremobi.cadastrofuncionarios.Config;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +27,19 @@ public class SecurityConfig {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/voo/**",
-                                "/passageiro/**",
-                                "/portao/**",
-                                "/relatorio/**"
-                        ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+
+                        // POST /passageiro exige autenticação
+                        .requestMatchers(HttpMethod.POST, "/passageiro/**").authenticated()
+
+                        // PUT/DELETE em /voo, /portao, /relatorio exige cargo ADMIN
+                        .requestMatchers(HttpMethod.PUT, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
+
+                        // Outras rotas POST (exceto /auth) exigem autenticação
+                        .requestMatchers(HttpMethod.POST, "/**").authenticated()
+
+                        // Demais requisições são públicas
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -46,6 +53,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-
- // .requestMatchers(HttpMethod.POST, "/passageiro/**").authenticated()
-//  .requestMatchers( "/voo/**, ","/portao/** ","/relatorio/**").hasAuthority("ADMIN")

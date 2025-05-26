@@ -24,20 +24,26 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
+
         String header = req.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
                 Claims claims = jwtUtil.validateToken(token);
-                String cargo = (String) claims.get("cargo");
+                String cargo = ((String) claims.get("cargo")).toUpperCase(); // Normaliza o cargo
 
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(cargo));
+                // Adiciona prefixo ROLE_ conforme padrão do Spring
+                List<SimpleGrantedAuthority> authorities = List.of(
+                        new SimpleGrantedAuthority("ROLE_" + cargo)
+                );
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(claims.get("email"), null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
+
             } catch (Exception e) {
+                e.printStackTrace(); // ajuda no debug
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
