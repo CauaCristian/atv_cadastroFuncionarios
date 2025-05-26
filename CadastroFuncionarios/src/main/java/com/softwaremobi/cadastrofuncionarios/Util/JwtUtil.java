@@ -14,14 +14,14 @@ public class JwtUtil {
 
     private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private final long EXPIRATION = 2 * 60 * 1000; // 2 minutos
+    private final long EXPIRATION = 5 * 60 * 1000;
 
     public String generateToken(Funcionario f) {
         return Jwts.builder()
                 .setSubject(f.getEmail())
                 .claim("id", f.getId())
                 .claim("nome", f.getNome())
-                .claim("cargo", f.getCargo()) // Ex: ADMIN
+                .claim("cargo", f.getCargo())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(key)

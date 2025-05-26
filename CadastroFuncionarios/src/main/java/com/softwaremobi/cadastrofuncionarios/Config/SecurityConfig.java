@@ -31,8 +31,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/passageiro/**").authenticated()
 
-                        .requestMatchers(HttpMethod.PUT, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/voo/**", "/portao/**", "/relatorio/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/voo/**", "/portao/**", "/relatorio/**","/passageiro/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/voo/**", "/portao/**", "/relatorio/**","/passageiro/**").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/**").authenticated()
 
